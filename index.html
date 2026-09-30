@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arshad Naib — AI-assisted web design for local shops</title>
+<meta name="description" content="AI-powered websites and monthly social content for local shops in Hong Kong. One-page sites, built in days, plus content that brings in customers.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23050505'/%3E%3Cpath d='M10 23 16 8l6 15M12.4 18h7.2' stroke='%2300D6FF' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#050505;
+  --bg2:#0A0A0C;
+  --glow:#050815;
+  --ink:#FFFFFF;
+  --muted:rgba(255,255,255,.6);
+  --faint:rgba(255,255,255,.38);
+  --a1:#0050FF;
+  --a2:#00D6FF;
+  --line:rgba(255,255,255,.08);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--muted);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  font-size:17px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+::selection{background:rgba(0,214,255,.25)}
+a{color:inherit;text-decoration:none}
+
+/* ---------- nav ---------- */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;height:64px;
+  opacity:0;transform:translateY(-8px);transition:opacity .5s cubic-bezier(.22,1,.36,1),transform .5s cubic-bezier(.22,1,.36,1),background .3s;
+  background:transparent;border-bottom:1px solid transparent;
+}
+nav.visible{
+  opacity:1;transform:none;
+  background:rgba(5,5,5,.72);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--line);
+}
+.nav-brand{font-weight:700;font-size:15px;letter-spacing:-.01em;color:var(--ink)}
+.nav-brand b{color:var(--a2);font-weight:700}
+.nav-links{display:flex;gap:30px;position:absolute;left:50%;transform:translateX(-50%)}
+.nav-links a{font-size:13.5px;color:var(--faint);letter-spacing:.01em;transition:color .25s}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{
+  font-size:13px;font-weight:600;letter-spacing:.01em;color:#fff;
+  padding:10px 20px;border-radius:999px;cursor:pointer;
+  background:linear-gradient(135deg,var(--a1),var(--a2));
+  box-shadow:0 4px 24px rgba(0,80,255,.35);
+  transition:transform .25s cubic-bezier(.22,1,.36,1),box-shadow .25s;
+}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 8px 34px rgba(0,80,255,.5)}
+
+/* ---------- story ---------- */
+.story{position:relative;height:400vh}
+.pin{position:sticky;top:0;height:100vh;overflow:hidden;
+  background:var(--bg);
+  background:radial-gradient(120% 90% at 50% 30%,var(--glow) 0%,var(--bg) 62%);
+}
+#scene{position:absolute;inset:0;width:100%;height:100%;display:block}
+#poster{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none}
+.beat{
+  position:absolute;z-index:5;opacity:0;pointer-events:none;
+  transition:opacity .45s cubic-bezier(.22,1,.36,1);
+  padding:0 9vw;width:100%;
+}
+.beat .kicker{
+  font-size:12px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--a2);margin-bottom:18px;
+}
+/* ---------- portrait ---------- */
+.portrait{
+  width:clamp(128px,15vw,172px);height:clamp(128px,15vw,172px);
+  border-radius:50%;overflow:hidden;position:relative;margin-bottom:38px;
+  border:2px solid rgba(0,214,255,.35);
+  box-shadow:0 0 0 6px rgba(5,5,5,.6),0 0 44px rgba(0,214,255,.22),0 0 120px rgba(0,80,255,.18);
+}
+.portrait img{width:100%;height:100%;object-fit:cover;display:block}
+.portrait::after{
+  content:'';position:absolute;inset:-6px;border-radius:50%;
+  border:1.5px solid transparent;
+  background:conic-gradient(from 0deg,rgba(0,214,255,0),rgba(0,214,255,.9),rgba(0,80,255,.9),rgba(0,214,255,0)) border-box;
+  -webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  animation:rot 6s linear infinite;
+}
+@keyframes rot{to{transform:rotate(360deg)}}
+/* ---------- stats strip ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;max-width:1000px;margin:0 auto 0}
+.stat{padding:26px 18px;border:1px solid rgba(255,255,255,.08);border-radius:14px;background:rgba(255,255,255,.02)}
+.stat b{display:block;font-size:clamp(24px,3vw,34px);letter-spacing:-.02em;color:#fff;margin-bottom:6px}
+.stat b em{font-style:normal;color:var(--a2);font-size:.55em;font-weight:500;letter-spacing:.02em}
+.stat span{font-size:13px;color:var(--faint)}
+/* ---------- process ---------- */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;max-width:1000px;margin:0 auto}
+.step{position:relative;padding:24px 20px;border:1px solid rgba(255,255,255,.08);border-radius:14px;background:rgba(255,255,255,.02)}
+.step .n{font-size:13px;font-weight:700;letter-spacing:.14em;color:var(--a2);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.step .n::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(0,214,255,.4),transparent)}
+.step h4{margin:0 0 8px;font-size:17px}
+.step p{margin:0;font-size:14px;line-height:1.6;color:var(--faint)}
+/* ---------- FAQ ---------- */
+.faq{max-width:760px;margin:0 auto}
+.faq-item{border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.02);margin-bottom:10px;overflow:hidden}
+.faq-q{width:100%;display:flex;justify-content:space-between;align-items:center;gap:14px;padding:18px 20px;background:none;border:0;color:#fff;font:inherit;font-size:15px;text-align:left;cursor:pointer}
+.faq-q svg{flex:none;transition:transform .3s cubic-bezier(.22,1,.36,1)}
+.faq-item.open .faq-q svg{transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.22,1,.36,1)}
+.faq-a div{padding:0 20px 18px;font-size:14px;line-height:1.7;color:var(--faint)}
+/* ---------- AI chat widget ---------- */
+.chat-launcher{
+  position:fixed;right:22px;bottom:22px;z-index:1200;width:60px;height:60px;border-radius:50%;
+  border:0;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#0050FF,#00D6FF);
+  box-shadow:0 8px 30px rgba(0,80,255,.45),0 0 0 0 rgba(0,214,255,.35);
+  transition:transform .25s cubic-bezier(.22,1,.36,1),box-shadow .25s;
+}
+.chat-launcher:hover{transform:translateY(-3px) scale(1.04)}
+.chat-launcher svg{width:26px;height:26px;color:#fff}
+.chat-launcher .close-ico{display:none}
+.chat-panel{
+  position:fixed;right:22px;bottom:94px;z-index:1200;width:min(380px,calc(100vw - 32px));
+  height:min(540px,calc(100vh - 130px));display:none;flex-direction:column;
+  background:#0A0A0C;border:1px solid rgba(255,255,255,.12);border-radius:18px;overflow:hidden;
+  box-shadow:0 24px 80px rgba(0,0,0,.7),0 0 0 1px rgba(0,214,255,.08);
+}
+.chat-panel.open{display:flex;animation:panelIn .3s cubic-bezier(.22,1,.36,1)}
+@keyframes panelIn{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+.chat-head{padding:16px 18px;background:linear-gradient(135deg,rgba(0,80,255,.25),rgba(0,214,255,.12));border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:12px}
+.chat-ava{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#0050FF,#00D6FF);display:flex;align-items:center;justify-content:center;flex:none}
+.chat-ava svg{width:19px;height:19px;color:#fff}
+.chat-head b{display:block;font-size:15px;color:#fff}
+.chat-head span{font-size:12px;color:var(--faint)}
+.chat-head .dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e;margin-left:auto;flex:none}
+.chat-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
+.chat-body::-webkit-scrollbar{width:5px}
+.chat-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:3px}
+.msg{max-width:82%;padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.55;animation:msgIn .25s cubic-bezier(.22,1,.36,1)}
+@keyframes msgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.msg.bot{align-self:flex-start;background:rgba(255,255,255,.06);color:#e8e8ee;border-bottom-left-radius:4px}
+.msg.user{align-self:flex-end;background:linear-gradient(135deg,#0050FF,#0070ff);color:#fff;border-bottom-right-radius:4px}
+.msg .wa-link{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:7px 12px;border-radius:8px;background:rgba(0,214,255,.12);color:var(--a2);font-size:13px;text-decoration:none;font-weight:600}
+.msg .wa-link:hover{background:rgba(0,214,255,.2)}
+.chips{padding:10px 14px;display:flex;flex-wrap:wrap;gap:8px;border-top:1px solid rgba(255,255,255,.07)}
+.chip{padding:7px 12px;border-radius:20px;border:1px solid rgba(0,214,255,.35);background:rgba(0,214,255,.06);color:var(--a2);font-size:12.5px;cursor:pointer;transition:all .2s}
+.chip:hover{background:rgba(0,214,255,.16)}
+.chat-in{display:flex;gap:8px;padding:12px 14px;border-top:1px solid rgba(255,255,255,.07)}
+.chat-in input{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:11px 13px;color:#fff;font:inherit;font-size:14px;outline:none}
+.chat-in input:focus{border-color:rgba(0,214,255,.5)}
+.chat-in button{width:44px;height:44px;border-radius:10px;border:0;cursor:pointer;background:linear-gradient(135deg,#0050FF,#00D6FF);display:flex;align-items:center;justify-content:center;flex:none}
+.chat-in button svg{width:18px;height:18px;color:#fff}
+.typing{display:inline-flex;gap:4px;align-items:center;padding:4px 2px}
+.typing i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.5);animation:tp 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+@keyframes tp{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+.beat h1,.beat h2{
+  font-size:clamp(40px,7vw,84px);line-height:1.02;letter-spacing:-.03em;
+  font-weight:700;color:var(--ink);margin-bottom:22px;max-width:900px;
+}
+.beat h2{font-size:clamp(30px,4.6vw,56px);max-width:760px}
+.beat p{font-size:clamp(15px,1.5vw,18px);color:var(--muted);max-width:520px}
+.beat ul{list-style:none;margin-top:6px}
+.beat li{font-size:clamp(15px,1.5vw,18px);color:var(--muted);padding:4px 0;position:relative;padding-left:26px}
+.beat li::before{content:'';position:absolute;left:0;top:14px;width:14px;height:1.5px;background:var(--a2)}
+.beat.center{display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:center;top:0;height:100%}
+.beat.center p{max-width:600px;margin:0 auto}
+.beat.left{display:flex;flex-direction:column;justify-content:center;top:0;height:100%;align-items:flex-start}
+.beat.right{display:flex;flex-direction:column;justify-content:center;top:0;height:100%;align-items:flex-end;text-align:right}
+.beat.right p,.beat.right ul{text-align:right}
+.beat.right li::before{left:auto;right:0}
+.beat.right li{padding-left:0;padding-right:26px}
+.cta-row{display:flex;gap:14px;margin-top:30px;flex-wrap:wrap;justify-content:center}
+.btn{
+  font-size:14.5px;font-weight:600;letter-spacing:.01em;color:#fff;cursor:pointer;
+  padding:15px 30px;border-radius:999px;border:none;
+  background:linear-gradient(135deg,var(--a1),var(--a2));
+  box-shadow:0 4px 24px rgba(0,80,255,.35);
+  transition:transform .25s cubic-bezier(.22,1,.36,1),box-shadow .25s;
+  display:inline-flex;align-items:center;gap:9px;
+}
+.btn:hover{transform:translateY(-1px);box-shadow:0 8px 34px rgba(0,80,255,.5)}
+.btn.ghost{
+  background:transparent;color:var(--ink);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);
+}
+.btn.ghost:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.4)}
+
+/* exploded-diagram labels */
+.tags{position:absolute;inset:0;z-index:6;pointer-events:none}
+.tag{
+  position:absolute;display:flex;align-items:center;gap:10px;
+  opacity:0;transition:opacity .4s ease;
+}
+.tag .dot{width:7px;height:7px;border-radius:50%;background:var(--a2);box-shadow:0 0 12px rgba(0,214,255,.8)}
+.tag .txt{font-size:12.5px;color:var(--muted);letter-spacing:.04em}
+.tag .txt b{color:var(--ink);font-weight:600;display:block;font-size:13px;letter-spacing:.02em}
+.tag.t1{top:26%;left:16%}
+.tag.t2{top:38%;right:14%;flex-direction:row-reverse}
+.tag.t2 .txt{text-align:right}
+.tag.t3{bottom:22%;left:20%}
+
+/* ---------- packages ---------- */
+.section{padding:130px 9vw}
+.section-head{margin-bottom:60px}
+.section-head .kicker{font-size:12px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--a2);margin-bottom:14px}
+.section-head h2{font-size:clamp(30px,4.4vw,54px);line-height:1.05;letter-spacing:-.025em;color:var(--ink);font-weight:700;max-width:680px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.cards--two{grid-template-columns:repeat(2,1fr)}
+.card{
+  background:var(--bg2);border:1px solid var(--line);border-radius:18px;
+  padding:38px 32px;display:flex;flex-direction:column;
+  transition:transform .35s cubic-bezier(.22,1,.36,1),border-color .35s,box-shadow .35s;
+}
+.card:hover{transform:translateY(-4px);border-color:rgba(0,214,255,.35);box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.card .ico{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,214,255,.1);border:1px solid rgba(0,214,255,.25);margin-bottom:26px}
+.card .ico svg{width:19px;height:19px;stroke:var(--a2)}
+.card h3{font-size:19px;color:var(--ink);font-weight:650;letter-spacing:-.01em;margin-bottom:6px}
+.card .price{font-size:32px;color:var(--ink);font-weight:750;letter-spacing:-.02em;margin-bottom:4px}
+.card .per{font-size:13px;color:var(--faint);margin-bottom:20px}
+.card p{font-size:14.5px;color:var(--muted);margin-bottom:26px;flex:1}
+.card .btn{justify-content:center;width:100%}
+.card.hot{border-color:rgba(0,214,255,.45);background:linear-gradient(180deg,rgba(0,86,255,.08),rgba(0,0,0,0) 60%),var(--bg2)}
+.card.hot .badge{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#03141c;
+  background:linear-gradient(135deg,var(--a1),var(--a2));display:inline-block;padding:4px 10px;border-radius:999px;margin-bottom:16px}
+
+/* ---------- contact ---------- */
+.contact{background:var(--bg2);border-top:1px solid var(--line)}
+.contact-wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:70px;align-items:start}
+.contact h2{font-size:clamp(28px,3.8vw,46px);color:var(--ink);letter-spacing:-.025em;line-height:1.08;margin-bottom:18px;font-weight:700}
+.contact .lead{color:var(--muted);max-width:440px;margin-bottom:34px}
+.wa-line{display:flex;align-items:center;gap:14px;margin-bottom:34px}
+.wa-line .wa-ico{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--a1),var(--a2));display:flex;align-items:center;justify-content:center}
+.wa-line .wa-ico svg{width:22px;height:22px;fill:#fff}
+.wa-line .num{font-size:17px;color:var(--ink);font-weight:600;letter-spacing:.01em}
+.wa-line .sub{font-size:12.5px;color:var(--faint)}
+form{display:flex;flex-direction:column;gap:16px}
+.field label{display:block;font-size:12.5px;color:var(--faint);letter-spacing:.06em;margin-bottom:8px}
+.field input,.field textarea{
+  width:100%;background:#0e0e12;border:1px solid var(--line);border-radius:12px;
+  padding:14px 16px;color:var(--ink);font-size:15px;font-family:inherit;outline:none;
+  transition:border-color .25s,box-shadow .25s;
+}
+.field input:focus,.field textarea:focus{border-color:rgba(0,214,255,.5);box-shadow:0 0 0 3px rgba(0,214,255,.1)}
+.field textarea{min-height:110px;resize:vertical}
+form .btn{justify-content:center}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:46px 9vw;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+footer .f-brand{font-size:14px;color:var(--faint)}
+footer .f-brand b{color:var(--ink)}
+footer .socials{display:flex;gap:18px}
+footer .socials a{font-size:13px;color:var(--faint);transition:color .25s}
+footer .socials a:hover{color:var(--a2)}
+
+/* ---------- reduced motion / poster ---------- */
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  #scene{display:none!important}
+  #poster{opacity:1!important}
+  .beat{transition:none}
+}
+
+/* ---------- responsive ---------- */
+@media (max-width:900px){
+  .cards{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .steps{grid-template-columns:1fr}
+  .contact-wrap{grid-template-columns:1fr;gap:44px}
+  .nav-links{display:none}
+  .beat{padding:0 7vw}
+  .tag.t1{top:22%;left:8%}
+  .tag.t2{top:34%;right:6%}
+  .tag.t3{bottom:20%;left:10%}
+  .chat-panel{right:14px;bottom:86px}
+  .chat-launcher{right:14px;bottom:14px}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a class="nav-brand" href="#top">Arshad<b>Naib</b></a>
+  <div class="nav-links">
+    <a href="#top">Overview</a>
+    <a href="#services">Services</a>
+    <a href="#packages">Packages</a>
+    <a href="#process">Process</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <a class="nav-cta" href="#contact">Start a project</a>
+</nav>
+
+<section class="story" id="top">
+  <div class="pin" id="pin">
+    <canvas id="scene"></canvas>
+    <div id="poster">
+      <svg width="300" height="200" viewBox="0 0 300 200" fill="none">
+        <path d="M78 165 120 35l42 130M94 126h52" stroke="#00D6FF" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>
+        <path d="M196 35h12v130M196 35l44 130M196 74h36" stroke="#0050FF" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>
+      </svg>
+    </div>
+
+    <!-- BEAT 1 hero -->
+    <div class="beat center" id="b1">
+      <div class="portrait"><img src="avatar-suit.png" alt="Arshad Naib"></div>
+      <div class="kicker">AI-assisted web designer — Hong Kong</div>
+      <h1>Arshad Naib</h1>
+      <p>AI-powered websites for local shops. One-page websites + monthly social content that bring in customers.</p>
+      <div class="cta-row">
+        <a class="btn" href="#packages">See packages</a>
+      </div>
+    </div>
+
+    <!-- BEAT 2 what I do -->
+    <div class="beat left" id="b2">
+      <div class="kicker">01 — What I do</div>
+      <h2>Modern one-page websites, built in days, not months.</h2>
+      <p>Content posts for Facebook / Instagram every month. You run the shop, I run your online presence.</p>
+    </div>
+
+    <!-- BEAT 3 how it works -->
+    <div class="beat right" id="b3">
+      <div class="kicker">02 — How it works</div>
+      <h2>Simple. Fast. Yours.</h2>
+      <ul>
+        <li>You tell me about your shop.</li>
+        <li>I build your site in 1–2 weeks.</li>
+        <li>I keep your social feeds alive monthly.</li>
+      </ul>
+    </div>
+
+    <!-- BEAT 4 why it works -->
+    <div class="beat left" id="b4">
+      <div class="kicker">03 — Why it works</div>
+      <h2>Show up where your customers already are.</h2>
+      <ul>
+        <li>Show up on mobile where customers search.</li>
+        <li>Post every week without lifting a finger.</li>
+      </ul>
+    </div>
+
+    <!-- BEAT 5 CTA -->
+    <div class="beat center" id="b5">
+      <div class="kicker">04 — Let's talk</div>
+      <h2>Let's build your shop's presence.</h2>
+      <div class="cta-row">
+        <a class="btn" id="wa-top" href="https://wa.me/8801727067920" target="_blank" rel="noopener">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m0 1.67c2.2 0 4.26.86 5.82 2.42a8.2 8.2 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23a8.2 8.2 0 0 1-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24m-3.11 4.5c-.16 0-.43.06-.66.31-.22.25-.87.85-.87 2.07 0 1.22.89 2.4 1.01 2.56.13.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.46-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.23-.16-.48-.28-.25-.13-1.47-.73-1.7-.81-.23-.08-.4-.12-.56.12-.17.25-.64.81-.78.97-.14.17-.29.19-.53.07-.26-.13-1.06-.39-2.02-1.25-.75-.66-1.25-1.48-1.4-1.73-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.13-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.13-.56-1.34-.77-1.84-.2-.48-.4-.42-.56-.43h-.48"/></svg>
+          WhatsApp me
+        </a>
+        <a class="btn ghost" href="#packages">See packages</a>
+      </div>
+    </div>
+
+    <!-- exploded diagram labels -->
+    <div class="tags" id="tags">
+      <div class="tag t1"><span class="dot"></span><div class="txt"><b>Letter A</b>Identity mark</div></div>
+      <div class="tag t2"><span class="dot"></span><div class="txt"><b>Letter N</b>One mark, two letters</div></div>
+      <div class="tag t3"><span class="dot"></span><div class="txt"><b>Built with code</b>No templates</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="services" style="padding-top:80px">
+  <div class="section-head">
+    <div class="kicker">Services</div>
+    <h2>Everything a local shop needs to be found online.</h2>
+  </div>
+  <div class="cards cards--two">
+    <div class="card">
+      <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M3 6.5A2.5 2.5 0 0 1 5.5 4H9l2 2.5h7.5A2.5 2.5 0 0 1 21 9v8.5a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5Z"/><path d="M3 10h18"/></svg></div>
+      <h3>One-page websites</h3>
+      <p>A modern, mobile-first site that tells your story and gets customers calling. Built in 1–2 weeks.</p>
+    </div>
+    <div class="card">
+      <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg></div>
+      <h3>Monthly social content</h3>
+      <p>Fresh posts for Facebook and Instagram every week — written, designed and scheduled for you.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="packages" style="padding-top:40px">
+  <div class="section-head">
+    <div class="kicker">Packages</div>
+    <h2>Simple pricing. No surprises.</h2>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M4 7l8-4 8 4-8 4-8-4Z"/><path d="M4 7v10l8 4 8-4V7"/><path d="M12 11v10"/></svg></div>
+      <h3>Standard site</h3>
+      <div class="price">USD 350</div>
+      <div class="per">one-time</div>
+      <p>Modern one-page website, mobile-first, built in 1–2 weeks. Perfect for getting found.</p>
+      <a class="btn" href="https://wa.me/8801727067920?text=Hi%20Arshad%2C%20I%20want%20the%20Standard%20site%20package%20(USD%20350)." target="_blank" rel="noopener">WhatsApp me</a>
+    </div>
+    <div class="card hot">
+      <span class="badge">Most popular</span>
+      <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5Z"/></svg></div>
+      <h3>Content monthly</h3>
+      <div class="price">USD 230<span style="font-size:15px;color:var(--faint)">/mo</span></div>
+      <div class="per">monthly</div>
+      <p>Weekly posts for Facebook &amp; Instagram — designed, written and scheduled. You stay visible.</p>
+      <a class="btn" href="https://wa.me/8801727067920?text=Hi%20Arshad%2C%20I%20want%20the%20Content%20monthly%20package%20(USD%20230%2Fmo)." target="_blank" rel="noopener">WhatsApp me</a>
+    </div>
+    <div class="card">
+      <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M7 15l3-3 2 2 4-5"/></svg></div>
+      <h3>Site + content</h3>
+      <div class="price">USD 480</div>
+      <div class="per">site + first month</div>
+      <p>The full package: your new website plus the first month of content. Launch ready.</p>
+      <a class="btn" href="https://wa.me/8801727067920?text=Hi%20Arshad%2C%20I%20want%20the%20Site%20%2B%20content%20package%20(USD%20480)." target="_blank" rel="noopener">WhatsApp me</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="stats" style="padding-top:40px">
+  <div class="stats">
+    <div class="stat"><b><em>24</em>h</b><span>First reply, no pressure</span></div>
+    <div class="stat"><b>1–<em>2</em>wks</b><span>From brief to live website</span></div>
+    <div class="stat"><b>4</b><span>Weekly social posts, done for you</span></div>
+    <div class="stat"><b>100<em>%</em></b><span>Mobile-first, built to be found</span></div>
+  </div>
+</section>
+
+<section class="section" id="process" style="padding-top:80px">
+  <div class="section-head">
+    <div class="kicker">Process</div>
+    <h2>From hello to live in four steps.</h2>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="n">01</div>
+      <h4>Tell me about your shop</h4>
+      <p>A quick call or message — what you do, who you serve, what feels missing.</p>
+    </div>
+    <div class="step">
+      <div class="n">02</div>
+      <h4>I plan and quote</h4>
+      <p>Within 24 hours you get a clear plan and a fixed price. No jargon, no surprises.</p>
+    </div>
+    <div class="step">
+      <div class="n">03</div>
+      <h4>I build your site</h4>
+      <p>1–2 weeks later you have a modern, mobile-first site that gets customers calling.</p>
+    </div>
+    <div class="step">
+      <div class="n">04</div>
+      <h4>You stay visible</h4>
+      <p>Optional monthly content keeps your social feeds alive — written and scheduled for you.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="faq" style="padding-top:80px">
+  <div class="section-head">
+    <div class="kicker">FAQ</div>
+    <h2>Quick answers, before you ask.</h2>
+  </div>
+  <div class="faq">
+    <div class="faq-item">
+      <button class="faq-q" type="button">How much does a website cost?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+      <div class="faq-a"><div>Standard one-page website is USD 350 one-time. Monthly social content is USD 230/mo. The full bundle — site plus first month of content — is USD 480. No hidden fees.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" type="button">How long does it take?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+      <div class="faq-a"><div>Your website is typically live in 1–2 weeks from the moment you confirm the plan. Content posts are delivered every week once the monthly plan starts.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" type="button">What do I need to prepare?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+      <div class="faq-a"><div>Almost nothing. I write the copy, design the layout, and set everything up. You just share a few details about your shop — photos help, but they're optional.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" type="button">Will it work on phones?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+      <div class="faq-a"><div>Yes — every site is mobile-first. Most customers find local shops on their phones, so your site is designed to look sharp and load fast there first.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" type="button">Do you also manage my social media?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+      <div class="faq-a"><div>Yes. The Content monthly plan covers weekly Facebook and Instagram posts — designed, written and scheduled for you, so you stay visible without lifting a finger.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" type="button">How do I start?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+      <div class="faq-a"><div>Message me on WhatsApp or send the form below. I'll reply within 24 hours with a plan and a fixed quote — no pressure, no jargon.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section contact" id="contact">
+  <div class="contact-wrap">
+    <div>
+      <div class="kicker">Contact</div>
+      <h2>Let's build your shop's presence.</h2>
+      <p class="lead">Tell me about your shop and I'll reply within 24 hours with a plan and a quote. No pressure, no jargon.</p>
+      <a class="wa-line" href="https://wa.me/8801727067920" target="_blank" rel="noopener">
+        <span class="wa-ico"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m0 1.67c2.2 0 4.26.86 5.82 2.42a8.2 8.2 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23a8.2 8.2 0 0 1-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24m-3.11 4.5c-.16 0-.43.06-.66.31-.22.25-.87.85-.87 2.07 0 1.22.89 2.4 1.01 2.56.13.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.46-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.23-.16-.48-.28-.25-.13-1.47-.73-1.7-.81-.23-.08-.4-.12-.56.12-.17.25-.64.81-.78.97-.14.17-.29.19-.53.07-.26-.13-1.06-.39-2.02-1.25-.75-.66-1.25-1.48-1.4-1.73-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.13-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.13-.56-1.34-.77-1.84-.2-.48-.4-.42-.56-.43h-.48"/></svg></span>
+        <span><span class="num">+880 1727 067 920</span><br><span class="sub">WhatsApp — fastest reply</span></span>
+      </a>
+    </div>
+    <form id="contact-form">
+      <div class="field">
+        <label for="f-name">Your name</label>
+        <input id="f-name" type="text" placeholder="e.g. Wing Lee" required>
+      </div>
+      <div class="field">
+        <label for="f-shop">Your shop</label>
+        <input id="f-shop" type="text" placeholder="e.g. Lee's Noodle House">
+      </div>
+      <div class="field">
+        <label for="f-msg">What do you need?</label>
+        <textarea id="f-msg" placeholder="A new website, monthly posts, or both — tell me a little about your shop." required></textarea>
+      </div>
+      <button class="btn" type="submit">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m0 1.67c2.2 0 4.26.86 5.82 2.42a8.2 8.2 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23a8.2 8.2 0 0 1-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24m-3.11 4.5c-.16 0-.43.06-.66.31-.22.25-.87.85-.87 2.07 0 1.22.89 2.4 1.01 2.56.13.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.46-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.23-.16-.48-.28-.25-.13-1.47-.73-1.7-.81-.23-.08-.4-.12-.56.12-.17.25-.64.81-.78.97-.14.17-.29.19-.53.07-.26-.13-1.06-.39-2.02-1.25-.75-.66-1.25-1.48-1.4-1.73-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.13-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.13-.56-1.34-.77-1.84-.2-.48-.4-.42-.56-.43h-.48"/></svg>
+        Send via WhatsApp
+      </button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="f-brand"><b>Arshad Naib</b> — AI-assisted web design for local shops · Hong Kong</div>
+  <div class="socials">
+    <a href="https://github.com/arshadnaib20" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://www.linkedin.com/in/abu-arshad-naib-402b0020a/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+
+<!-- AI chat assistant -->
+<button class="chat-launcher" id="chat-launcher" aria-label="Open chat assistant" type="button">
+  <svg class="chat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+  <svg class="close-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+</button>
+<div class="chat-panel" id="chat-panel">
+  <div class="chat-head">
+    <div class="chat-ava"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+    <div><b>Arshad's assistant</b><span>Answers in seconds · 24/7</span></div>
+    <span class="dot"></span>
+  </div>
+  <div class="chat-body" id="chat-body"></div>
+  <div class="chips" id="chips">
+    <button class="chip" type="button" data-q="What do you charge?">What do you charge?</button>
+    <button class="chip" type="button" data-q="What services do you offer?">Services</button>
+    <button class="chip" type="button" data-q="How long does it take?">How long?</button>
+    <button class="chip" type="button" data-q="How do we start?">How do we start?</button>
+  </div>
+  <form class="chat-in" id="chat-form">
+    <input id="chat-input" type="text" placeholder="Type your question…" autocomplete="off">
+    <button type="submit" aria-label="Send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></button>
+  </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+<script>
+/* ============================================================
+   CORE — scroll-driven 3D monogram "AN"
+   ============================================================ */
+(function(){
+  const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+  const lerp=(a,b,t)=>a+(b-a)*t;
+  const ease=cubic=>t=>cubic(t*t*(3-2*t)); // smoothstep
+  const pin=document.getElementById('pin');
+  const story=document.getElementById('top');
+  const canvas=document.getElementById('scene');
+  const beats=[1,2,3,4,5].map(i=>document.getElementById('b'+i));
+  const tags=document.getElementById('tags');
+  const poster=document.getElementById('poster');
+  const nav=document.getElementById('nav');
+
+  let progress=0, cur=0;
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- scroll → progress ---------- */
+  function updateProgress(){
+    const s=story.offsetTop;
+    const h=story.offsetHeight-window.innerHeight;
+    progress=clamp((window.scrollY-s)/h,0,1);
+  }
+
+  /* ---------- beat opacity ---------- */
+  const ranges=[[0,.15],[.15,.4],[.4,.65],[.65,.85],[.85,1]];
+  function beatOpacities(p){
+    beats.forEach((b,i)=>{
+      const [s,e]=ranges[i];
+      const w=(e-s)*.5;
+      let o=0;
+      if(p>s&&p<e)o=1;
+      o=Math.min(o,(p-(s-w))/(w||.01));
+      o=Math.min(o,(e+w-p)/(w||.01));
+      b.style.opacity=clamp(o,0,1);
+    });
+    tags.style.opacity=(p>.15&&p<.85)?1:0;
+  }
+
+  /* ---------- nav ---------- */
+  function updateNav(){nav.classList.toggle('visible',window.scrollY>40)}
+
+  /* ============================================================
+     3D SCENE
+     ============================================================ */
+  let renderer,scene,camera,group,parts=[],raf;
+  let webgl=false;
+
+  function buildLetterA(){
+    const g=new THREE.Group();
+    const mat=new THREE.MeshStandardMaterial({color:0xdfe7ff,metalness:.95,roughness:.28});
+    const legL=new THREE.Mesh(new THREE.BoxGeometry(.34,2.7,.34),mat);
+    legL.position.set(-.52,0,0);legL.rotation.z=.16;
+    const legR=new THREE.Mesh(new THREE.BoxGeometry(.34,2.7,.34),mat);
+    legR.position.set(.52,0,0);legR.rotation.z=-.16;
+    const bar=new THREE.Mesh(new THREE.BoxGeometry(1.42,.3,.34),mat);
+    bar.position.set(0,-.42,0);
+    g.add(legL,legR,bar);
+    g.position.x=-1.45;
+    parts.push(legL,legR,bar);
+    return g;
+  }
+  function buildLetterN(){
+    const g=new THREE.Group();
+    const mat=new THREE.MeshStandardMaterial({color:0xbfe9ff,metalness:.92,roughness:.3});
+    const p1=new THREE.Mesh(new THREE.BoxGeometry(.34,2.7,.34),mat);
+    p1.position.set(-.58,0,0);
+    const p2=new THREE.Mesh(new THREE.BoxGeometry(.34,2.7,.34),mat);
+    p2.position.set(.58,0,0);
+    const dia=new THREE.Mesh(new THREE.BoxGeometry(.34,2.9,.34),mat);
+    dia.position.set(0,0,0);dia.rotation.z=.42;
+    g.add(p1,p2,dia);
+    g.position.x=1.45;
+    parts.push(p1,p2,dia);
+    return g;
+  }
+
+  let rings=[],floats=[];
+  function buildOrnaments(){
+    // glowing orbit rings
+    const ringGeo=new THREE.TorusGeometry(3.05,.02,16,160);
+    const ringA=new THREE.Mesh(ringGeo,new THREE.MeshStandardMaterial({color:0x00D6FF,emissive:0x00D6FF,emissiveIntensity:.9,transparent:true,opacity:.55,metalness:.4,roughness:.3}));
+    ringA.rotation.x=Math.PI/2.25;ringA.rotation.z=.3;
+    const ringB=new THREE.Mesh(new THREE.TorusGeometry(3.7,.015,16,160),new THREE.MeshStandardMaterial({color:0x0050FF,emissive:0x0050FF,emissiveIntensity:.7,transparent:true,opacity:.35,metalness:.4,roughness:.3}));
+    ringB.rotation.x=Math.PI/1.8;ringB.rotation.y=.5;
+    group.add(ringA,ringB);
+    rings.push(ringA,ringB);
+    // floating primitives orbiting
+    const shapes=[
+      [new THREE.OctahedronGeometry(.16),0x00D6FF],
+      [new THREE.IcosahedronGeometry(.13),0x0050FF],
+      [new THREE.TetrahedronGeometry(.18),0x9fd8ff],
+      [new THREE.DodecahedronGeometry(.11),0x00D6FF]
+    ];
+    shapes.forEach((s,i)=>{
+      const m=new THREE.Mesh(s[0],new THREE.MeshStandardMaterial({color:s[1],emissive:s[1],emissiveIntensity:.5,metalness:.8,roughness:.25}));
+      const a=(i/shapes.length)*Math.PI*2;
+      m.position.set(Math.cos(a)*4.2,Math.sin(a*2)*1.2,Math.sin(a)*1.6);
+      scene.add(m);
+      floats.push({mesh:m,angle:a,speed:.28+i*.06,rad:4.2+i*.4,yOff:i*.5});
+    });
+  }
+
+  function initScene(){
+    try{
+      renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+    }catch(e){return}
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+    renderer.setSize(window.innerWidth,window.innerHeight);
+    renderer.outputColorSpace=THREE.SRGBColorSpace;
+    renderer.toneMapping=THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure=1.1;
+
+    scene=new THREE.Scene();
+    camera=new THREE.PerspectiveCamera(42,window.innerWidth/window.innerHeight,.1,100);
+    camera.position.set(0,0,8.6);
+
+    const hemi=new THREE.HemisphereLight(0x8899ff,0x050505,.5);
+    scene.add(hemi);
+    const key=new THREE.DirectionalLight(0xffffff,1.6);
+    key.position.set(4,5,6);
+    scene.add(key);
+    const rimA=new THREE.PointLight(0x00D6FF,22,30);
+    rimA.position.set(-5,-2,-4);
+    scene.add(rimA);
+    const rimB=new THREE.PointLight(0x0050FF,18,30);
+    rimB.position.set(5,3,-3);
+    scene.add(rimB);
+
+    group=new THREE.Group();
+    group.add(buildLetterA());
+    group.add(buildLetterN());
+    scene.add(group);
+    buildOrnaments();
+
+    parts.forEach(p=>{p.userData.o=p.position.clone()});
+    webgl=true;
+  }
+
+  const dirs=[]; // per-part explode direction
+  function explodeDirs(){
+    parts.forEach(p=>{
+      const d=p.userData.o.clone().normalize();
+      d.z+=.5;d.normalize();
+      dirs.push(d);
+    });
+  }
+
+  function animate(){
+    cur=lerp(cur,progress,.08);
+    const p=cur;
+    const t=performance.now()*.001;
+    if(webgl){
+      // explode factor: 0 → out (15-40%) → hold → in (85-100%)
+      const out=ease(clamp((p-.15)/.22,0,1));
+      const back=ease(clamp((p-.82)/.16,0,1));
+      const ex=(1-back)*out;
+      parts.forEach((part,i)=>{
+        const d=dirs[i];
+        part.position.copy(part.userData.o).addScaledVector(d,ex*2.6);
+        part.rotation.x=d.x*ex*.5;
+        part.rotation.y=d.y*ex*.4;
+      });
+      group.rotation.y=Math.sin(p*Math.PI*1.5)*.12;
+      group.rotation.x=Math.sin(p*Math.PI*2)*.05;
+      rings.forEach((r,ri)=>{
+        r.rotation.z+=.0022*(ri? -1:1);
+        r.rotation.x+=.0006;
+      });
+      floats.forEach(f=>{
+        f.angle+=f.speed*.004;
+        const rad=f.rad+Math.sin(t*.5+f.yOff)*.25;
+        f.mesh.position.set(Math.cos(f.angle)*rad,Math.sin(t*.6+f.yOff)*1.4,Math.sin(f.angle)*1.8);
+        f.mesh.rotation.x+=.008;
+        f.mesh.rotation.y+=.01;
+      });
+      camera.position.x=Math.sin(p*Math.PI*1.5)*1.1;
+      camera.position.y=Math.sin(p*Math.PI*2)*.35;
+      camera.position.z=8.6-Math.sin(p*Math.PI)*.9;
+      camera.lookAt(0,0,0);
+      renderer.render(scene,camera);
+    }
+    raf=requestAnimationFrame(animate);
+  }
+
+  /* ---------- form → WhatsApp ---------- */
+  const form=document.getElementById('contact-form');
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    const name=document.getElementById('f-name').value.trim();
+    const shop=document.getElementById('f-shop').value.trim();
+    const msg=document.getElementById('f-msg').value.trim();
+    let text='Hi Arshad, I want to build my shop\'s online presence.';
+    if(name)text+='\nName: '+name;
+    if(shop)text+='\nShop: '+shop;
+    if(msg)text+='\nDetails: '+msg;
+    window.open('https://wa.me/8801727067920?text='+encodeURIComponent(text),'_blank');
+  });
+
+  /* ---------- boot ---------- */
+  updateProgress();
+  beatOpacities(progress);
+  updateNav();
+  window.addEventListener('scroll',()=>{updateProgress();beatOpacities(progress);updateNav()},{passive:true});
+  window.addEventListener('resize',()=>{
+    if(webgl){camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight)}
+  });
+
+  if(!reduced){
+    initScene();
+    if(webgl){explodeDirs();animate()}
+    else{poster.style.opacity=1;canvas.style.display='none'}
+  }else{
+    poster.style.opacity=1;canvas.style.display='none';
+  }
+})();
+
+/* ============================================================
+   FAQ accordion
+   ============================================================ */
+document.querySelectorAll('.faq-q').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const item=btn.parentElement;
+    const ans=item.querySelector('.faq-a');
+    const isOpen=item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(o=>{
+      o.classList.remove('open');
+      o.querySelector('.faq-a').style.maxHeight=null;
+    });
+    if(!isOpen){
+      item.classList.add('open');
+      ans.style.maxHeight=ans.scrollHeight+'px';
+    }
+  });
+});
+
+/* ============================================================
+   AI chat assistant — on-page intent engine (works fully offline)
+   ============================================================ */
+(function(){
+  const launcher=document.getElementById('chat-launcher');
+  const panel=document.getElementById('chat-panel');
+  const body=document.getElementById('chat-body');
+  const form=document.getElementById('chat-form');
+  const input=document.getElementById('chat-input');
+  const WA='https://wa.me/8801727067920?text=';
+
+  const FAQ=[
+    ['price','cost','how much','charg','fee','package','pricing','套餐','价格','几多钱','幾多錢','收费'],
+    ['time','long','when','deadline','quick','how soon','多久','几耐','時間','时间','几时'],
+    ['service','what do you do','offer','website','content','social','build','do you make','服务','做乜','什麼服務','做什么','網站','网站'],
+    ['start','begin','order','book','how to','hire','started','开始','點開始','怎麼開始','怎么开始','合作'],
+    ['contact','whatsapp','phone','email','reach','message','联系','聯絡','電話','whatsapp'],
+    ['prepare','need to provide','photo','logo','material','资料','準備','需要提供','要準備'],
+    ['mobile','phone','iphone','android','responsive','手机','電話睇','手機'],
+    ['hello','hi','hey','good morning','good evening','你好','嗨','早晨','哈囉','hello'],
+    ['thank','thanks','多谢','唔該','谢谢'],
+    ['bye','goodbye','see you','再见','拜拜'],
+  ];
+
+  const RULES=[
+    {key:'price',reply:'A one-page website is USD 350 one-time. Monthly social content is USD 230/mo, and the full bundle — site plus first month of content — is USD 480. No hidden fees. Want me to send you a package link?'},
+    {key:'time',reply:'Your website is typically live in 1–2 weeks from confirming the plan. Content posts go out every week once the monthly plan starts.'},
+    {key:'service',reply:'I build modern one-page websites for local shops and run their Facebook/Instagram content every month. Mobile-first, written and designed for you. What kind of shop do you run?'},
+    {key:'start',reply:'Easy — message me on WhatsApp or use the form below. Within 24 hours you get a clear plan and a fixed quote. No pressure, no jargon.'},
+    {key:'contact',reply:'Fastest is WhatsApp: +880 1727 067 920. I reply within 24 hours, usually much faster.'},
+    {key:'prepare',reply:'Almost nothing — I write the copy and design everything. A few photos of your shop help, but they are optional. You just share what you do and who you serve.'},
+    {key:'mobile',reply:'Every site I build is mobile-first. Most customers find local shops on their phones, so your site is designed to look sharp and load fast there first.'},
+    {key:'hello',reply:'Hello! I am Arshad\'s assistant. Ask me about pricing, timelines, or how we can get your shop online.'},
+    {key:'thank',reply:'You are welcome! Whenever you are ready, WhatsApp is the fastest way to get started.'},
+    {key:'bye',reply:'Goodbye! Whenever you are ready, WhatsApp is the fastest way to get started.'},
+  ];
+
+  function detect(q){
+    q=q.toLowerCase();
+    for(const r of RULES){
+      for(const k of FAQ.find(f=>f[0]===r.key).slice(1)){
+        if(q.includes(k.toLowerCase()))return r.key;
+      }
+    }
+    return 'fallback';
+  }
+
+  const FALLBACK='I can help with pricing, timelines, services, and how to start. If you want to talk directly, WhatsApp is the fastest: ';
+
+  function addMsg(role,html){
+    const d=document.createElement('div');
+    d.className='msg '+role;
+    d.innerHTML=html;
+    body.appendChild(d);
+    body.scrollTop=body.scrollHeight;
+  }
+
+  function typing(on){
+    if(on){
+      const t=document.createElement('div');
+      t.className='msg bot typing';
+      t.id='typing';
+      t.innerHTML='<i></i><i></i><i></i>';
+      body.appendChild(t);
+      body.scrollTop=body.scrollHeight;
+    }else{
+      const t=document.getElementById('typing');
+      if(t)t.remove();
+    }
+  }
+
+  function botReply(raw){
+    const key=detect(raw);
+    const reply=RULES.find(r=>r.key===key);
+    if(key==='fallback'){
+      return FALLBACK+'<a class="wa-link" href="'+WA+encodeURIComponent('Hi Arshad, I have a question about your services.')+'" target="_blank" rel="noopener">Chat on WhatsApp</a>';
+    }
+    if(reply.key==='price'){
+      return reply.reply+'<a class="wa-link" href="'+WA+encodeURIComponent('Hi Arshad, please send me the package details.')+'" target="_blank" rel="noopener">See packages</a>';
+    }
+    return reply.reply;
+  }
+
+  function ask(q){
+    if(!q.trim())return;
+    addMsg('user',escapeHtml(q));
+    input.value='';
+    typing(true);
+    setTimeout(()=>{
+      typing(false);
+      addMsg('bot',botReply(q));
+    },650+Math.random()*400);
+  }
+
+  function escapeHtml(s){
+    return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  launcher.addEventListener('click',()=>{
+    const open=panel.classList.toggle('open');
+    launcher.classList.toggle('active',open);
+    launcher.querySelector('.chat-ico').style.display=open?'none':'';
+    launcher.querySelector('.close-ico').style.display=open?'':'none';
+    if(open&&!body.children.length){
+      addMsg('bot','Hi! I can answer questions about pricing, timelines and services instantly — or put you straight through to Arshad on WhatsApp. What would you like to know?');
+    }
+  });
+
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    ask(input.value);
+  });
+
+  document.querySelectorAll('.chip').forEach(c=>{
+    c.addEventListener('click',()=>ask(c.dataset.q));
+  });
+})();
+</script>
+</body>
+</html>
